@@ -12,6 +12,7 @@ public class InputManager : MonoBehaviour
     public Vector2 MouseDelta { get; private set; }
     public Vector2 InputDirection { get; private set; }
     public bool RunFlag { get; private set; }
+    [HideInInspector] public UnityEvent EscapeTrigger;
     [HideInInspector] public UnityEvent InteractionTrigger;
 
     private void Awake()
@@ -30,11 +31,14 @@ public class InputManager : MonoBehaviour
         {
             playerInput = new InputControls();
             InteractionTrigger = new UnityEvent();
+            EscapeTrigger = new UnityEvent();
 
             playerInput.Main.Interaction.performed += ctx => InteractionTrigger?.Invoke();
 
             playerInput.Main.Run.started += ctx => RunFlag = true;
             playerInput.Main.Run.canceled += ctx => RunFlag = false;
+
+            playerInput.Main.Escape.performed += ctx => EscapeTrigger?.Invoke();
         }
 
         playerInput.Enable();

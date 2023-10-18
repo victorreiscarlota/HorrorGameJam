@@ -5,6 +5,11 @@ using UnityEngine;
 public class PlayerMadness : PlayerModule
 {
     public MadnessLevel CurrentMadness;
+
+    public void UpdateMadnessLevel(int modifier)
+    {
+        CurrentMadness += modifier;
+    }
 }
 
 

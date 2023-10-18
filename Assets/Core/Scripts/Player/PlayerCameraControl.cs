@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerCameraControl : PlayerModule
 {
-    [SerializeField] private Camera mainCamera;
+    [SerializeField] private Transform mainCamera;
     [SerializeField] private float sensitivity;
     [SerializeField] private float minPitchAngle;
     [SerializeField] private float maxPitchAngle;
@@ -71,6 +71,6 @@ public class PlayerCameraControl : PlayerModule
 
         currentPitch = targetPitch;
 
-        mainCamera.transform.rotation = currentYaw * currentPitch;
+        mainCamera.rotation = currentYaw * currentPitch;
     }
 }

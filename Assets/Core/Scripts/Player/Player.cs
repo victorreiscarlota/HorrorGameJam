@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private PlayerInteraction playerInteraction;
-    private PlayerMovement playerMovement;
-    private PlayerMadness playerMadness;
-    private PlayerCameraControl playerCameraControl;
-
+    public PlayerInteraction playerInteraction { get; private set; }
+    public PlayerMovement playerMovement { get; private set; }
+    public PlayerMadness playerMadness { get; private set; }
+    public PlayerCameraControl playerCameraControl { get; private set; }
+    public HeadBob headBob { get; private set; }
 
     private void Start()
     {
@@ -17,17 +17,21 @@ public class Player : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         playerMadness = GetComponent<PlayerMadness>();
         playerCameraControl = GetComponent<PlayerCameraControl>();
+        headBob = GetComponent<HeadBob>();
     }
 
 
     private void Update()
     {
+        if (GameManager.Instance.CurrentGameState != GameState.Running) return;
         playerCameraControl.Tick();
         playerMovement.Tick();
+        headBob.Tick();
     }
 
     private void FixedUpdate()
     {
+        if (GameManager.Instance.CurrentGameState != GameState.Running) return;
         playerInteraction.FixedTick();
     }
 }

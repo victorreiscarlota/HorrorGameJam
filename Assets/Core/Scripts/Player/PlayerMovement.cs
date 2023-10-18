@@ -4,19 +4,33 @@ using UnityEngine;
 
 public class PlayerMovement : PlayerModule
 {
-    [SerializeField] private CharacterController charController;
+    [Header("Main")] [SerializeField] private CharacterController charController;
     [SerializeField] private float playerBaseSpeed;
     [SerializeField] private float playerAcceleration;
     [SerializeField] private float playerDeacceleration;
     [SerializeField, Range(1f, 2f)] private float playerRunMultiplier;
 
+    [Header("FOV")] [SerializeField] private float minFOV;
+    [SerializeField] private float maxFOV;
 
     private Vector3 velocity;
+    private Vector2 horizontalVelocity;
+    private float currentSpeed;
+    public float MinSpeed{get ; private set;}
+    public float MaxSpeed{get ; private set;}
+
+    private void Start()
+    {
+        MinSpeed = playerBaseSpeed;
+        MaxSpeed = playerBaseSpeed * playerRunMultiplier;
+    }
 
     public override void Tick()
     {
         base.Tick();
         HandleMovement();
+        FovUpdateBasedOnSpeed();
+        UpdateSpeed();
     }
 
 
@@ -33,20 +47,34 @@ public class PlayerMovement : PlayerModule
 
         movDirection.Normalize();
         movDirection.y = 0;
-
+        horizontalVelocity = movDirection;
         velocity = new Vector3(movDirection.x, -5f, movDirection.z);
-        charController.Move(velocity * Time.deltaTime * GetSpeed());
+        charController.Move(velocity * Time.deltaTime * currentSpeed);
     }
 
-    private float GetSpeed()
+    private void UpdateSpeed()
     {
-        float targetSpeed = playerBaseSpeed;
-        
-        if (InputManager.Instance.RunFlag)
+        float targetSpeed = horizontalVelocity.magnitude > 0 ? playerBaseSpeed : 0;
+
+        if (InputManager.Instance.RunFlag && IsMovingFoward())
         {
             targetSpeed *= playerRunMultiplier;
         }
 
-        return targetSpeed;
+        currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, (horizontalVelocity.magnitude > 0 ? playerAcceleration : playerDeacceleration) * Time.deltaTime);
+    }
+
+    private bool IsMovingFoward()
+    {
+        return InputManager.Instance.InputDirection.y > 0 && InputManager.Instance.InputDirection.x == 0;
+    }
+
+    private void FovUpdateBasedOnSpeed()
+    {
+        float normalizedSpeed = Mathf.InverseLerp(MinSpeed, MaxSpeed, currentSpeed);
+        
+        float newFOV = Mathf.Lerp(minFOV, maxFOV, normalizedSpeed);
+        
+        Camera.main.fieldOfView = newFOV;
     }
 }

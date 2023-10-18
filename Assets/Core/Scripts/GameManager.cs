@@ -15,9 +15,27 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         UnpauseGame();
+        InputManager.Instance.EscapeTrigger.AddListener(ChangeGameState);
     }
 
     public GameState CurrentGameState { get; private set; }
+
+
+    private void ChangeGameState()
+    {
+        if (CurrentGameState == GameState.Running)
+        {
+            PauseGame();
+            UIManager.Instance.ChangeHUDState(false);
+            UIManager.Instance.ChangeMenusState(true);
+        }
+        else
+        {
+            UnpauseGame();
+            UIManager.Instance.ChangeHUDState(true);
+            UIManager.Instance.ChangeMenusState(false);
+        }
+    }
 
     public void PauseGame()
     {
