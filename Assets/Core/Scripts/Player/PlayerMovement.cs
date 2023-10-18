@@ -39,8 +39,8 @@ public class PlayerMovement : PlayerModule
         Vector3 cameraForward = Camera.main.transform.forward;
         Vector3 cameraRight = Camera.main.transform.right;
 
-        //cameraForward.y = 0;
-        //cameraRight.y = 0;
+        cameraForward.y = 0;
+        cameraRight.y = 0;
 
         Vector3 movDirection = InputManager.Instance.InputDirection.y * cameraForward;
         movDirection += InputManager.Instance.InputDirection.x * cameraRight;
@@ -55,12 +55,14 @@ public class PlayerMovement : PlayerModule
     private void UpdateSpeed()
     {
         float targetSpeed = horizontalVelocity.magnitude > 0 ? playerBaseSpeed : 0;
-
+        
         if (InputManager.Instance.RunFlag && IsMovingFoward())
         {
             targetSpeed *= playerRunMultiplier;
         }
 
+        targetSpeed *= GameManager.Instance.CurrentMadnessLevelData.PlayerSpeedMultiplier;
+        
         currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, (horizontalVelocity.magnitude > 0 ? playerAcceleration : playerDeacceleration) * Time.deltaTime);
     }
 

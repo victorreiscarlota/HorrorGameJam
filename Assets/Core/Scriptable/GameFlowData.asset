@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53f004a9d0e61b2449747943c4d8f90a, type: 3}
+  m_Name: GameFlowData
+  m_EditorClassIdentifier: 
+  NoMadnessLevel: {fileID: 11400000, guid: 99999e4861fcfd34895ef8e2d96a7d9c, type: 2}
+  LowMadnessLevel: {fileID: 11400000, guid: 387f2f8c1607c474a86ab21f14289865, type: 2}
+  MediumMadnessLevel: {fileID: 11400000, guid: c42dd863fb1e8d8418015f8b97c027e7, type: 2}
+  HighMadnessLevel: {fileID: 11400000, guid: fad2c78e97a479f438c0edc8c4903bfa, type: 2}

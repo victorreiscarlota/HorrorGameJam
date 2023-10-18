@@ -9,6 +9,12 @@ public class PlayerMadness : PlayerModule
     public void UpdateMadnessLevel(int modifier)
     {
         CurrentMadness += modifier;
+
+        if (CurrentMadness < 0) CurrentMadness = 0;
+
+        if ((int)CurrentMadness > 3) CurrentMadness = (MadnessLevel) 3;
+        
+        GameManager.Instance.UpdateCurrentMadness(CurrentMadness);
     }
 }
 

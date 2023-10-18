@@ -12,7 +12,7 @@ public class HeadBob : PlayerModule
     [SerializeField, Range(0, 0.1f)] private float maxAmplitude;
     [SerializeField, Range(0, 0.1f)] private float amplitude = 0.015f;
     [SerializeField, Range(0, 30)] private float frequency = 10.0f;
-    [SerializeField] private Transform camera = null;
+    [SerializeField] private Transform cameraTransform = null;
     [SerializeField] private Transform cameraHolder = null;
 
     private float toggleSpeed = 3.0f;
@@ -22,7 +22,7 @@ public class HeadBob : PlayerModule
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
-        startPos = camera.localPosition;
+        startPos = cameraTransform.localPosition;
     }
 
     public override void Tick()
@@ -31,7 +31,7 @@ public class HeadBob : PlayerModule
         UpdateAmplitude();
         CheckMotion();
         ResetPosition();
-        camera.LookAt(FocusTarget());
+        cameraTransform.LookAt(FocusTarget());
     }
 
     private void UpdateAmplitude()
@@ -64,7 +64,7 @@ public class HeadBob : PlayerModule
 
     private void PlayMotion(Vector3 motion)
     {
-        camera.localPosition += motion;
+        cameraTransform.localPosition += motion;
     }
 
     private Vector3 FocusTarget()
@@ -77,7 +77,7 @@ public class HeadBob : PlayerModule
 
     private void ResetPosition()
     {
-        if (camera.localPosition == startPos) return;
-        camera.localPosition = Vector3.Lerp(camera.localPosition, startPos, 1 * Time.deltaTime);
+        if (cameraTransform.localPosition == startPos) return;
+        cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, startPos, 1 * Time.deltaTime);
     }
 }
