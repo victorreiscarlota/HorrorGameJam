@@ -9,7 +9,7 @@ public class PlayerModule : MonoBehaviour
 
     private void Start()
     {
-        ThisPlayer.GetComponent<Player>();
+        ThisPlayer = GetComponent<Player>();
     }
 
     public virtual void Tick()

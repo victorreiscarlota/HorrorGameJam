@@ -15,7 +15,7 @@ public class PlayerInteraction : PlayerModule
 
     private void Start()
     {
-        Debug.Log("Start");
+        InputManager.Instance.InteractionTrigger.AddListener((TryInteraction));
     }
     public override void FixedTick()
     {
@@ -60,10 +60,14 @@ public class PlayerInteraction : PlayerModule
     private void TryInteraction()
     {
         if (!CanInteract()) return;
+
+        currentInteractor.Interact();
     }
 
     private bool CanInteract()
     {
+        if (!currentInteractor) return false;
+        
         return true;
     }
 
@@ -72,12 +76,8 @@ public class PlayerInteraction : PlayerModule
     {
         if (debugMode)
         {
-            Gizmos.DrawLine(Camera.main.transform.position,
-                currentHitPoint != Vector3.zero ? currentHitPoint : Camera.main.transform.forward * interactionRange);
-            Gizmos.DrawWireSphere(
-                currentHitPoint != Vector3.zero
-                    ? currentHitPoint
-                    : (Camera.main.transform.position + Camera.main.transform.forward * interactionRange),
+            Gizmos.DrawRay(Camera.main.transform.position, currentHitPoint != Vector3.zero ? currentHitPoint : Camera.main.transform.forward * interactionRange);
+            Gizmos.DrawWireSphere(currentHitPoint != Vector3.zero ? currentHitPoint : (Camera.main.transform.position + Camera.main.transform.forward * interactionRange),
                 interationSphereRadius);
         }
     }

@@ -8,7 +8,7 @@ public class InputManager : MonoBehaviour
 {
     public static InputManager Instance { get; private set; }
 
-    private PlayerInput playerInput;
+    private InputControls playerInput;
     public Vector2 MouseDelta { get; private set; }
     public Vector2 InputDirection { get; private set; }
     [HideInInspector] public UnityEvent InteractionTrigger;
@@ -27,7 +27,7 @@ public class InputManager : MonoBehaviour
     {
         if (playerInput == null)
         {
-            playerInput = new PlayerInput();
+            playerInput = new InputControls();
             InteractionTrigger = new UnityEvent();
 
             playerInput.Main.Interaction.performed += ctx => InteractionTrigger?.Invoke();

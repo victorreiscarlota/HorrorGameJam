@@ -6,6 +6,6 @@ public class Interactor : MonoBehaviour
 {
  public virtual void Interact()
  {
-  
+  Debug.Log($"Interacted with {this}");
  }
 }

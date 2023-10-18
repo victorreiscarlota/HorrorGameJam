@@ -23,6 +23,7 @@ public class Player : MonoBehaviour
     private void Update()
     {
         playerCameraControl.Tick();
+        playerMovement.Tick();
     }
 
     private void FixedUpdate()

@@ -258,7 +258,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.01
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -694,6 +694,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8a4cb0cd3e43014baf055d2d2088dca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurrentMadness: 0
 --- !u!114 &1335847457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -706,6 +707,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc57b440f8b26504ca8c46dbc1ca8805, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  charController: {fileID: 1335847460}
+  playerBaseSpeed: 5
+  playerAcceleration: 4
+  playerDeacceleration: 4
+  playerRunMultiplier: 1.25
 --- !u!114 &1335847458
 MonoBehaviour:
   m_ObjectHideFlags: 0
