@@ -53,6 +53,15 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Run"",
+                    ""type"": ""Button"",
+                    ""id"": ""4c3df9d8-b629-43b3-a32f-a707b5369b47"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -132,6 +141,17 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
                     ""action"": ""Interaction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b18cff6b-cf68-4db9-bfde-83775bd9aeb5"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Run"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -143,6 +163,7 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
         m_Main_MouseDelta = m_Main.FindAction("MouseDelta", throwIfNotFound: true);
         m_Main_InputDirection = m_Main.FindAction("InputDirection", throwIfNotFound: true);
         m_Main_Interaction = m_Main.FindAction("Interaction", throwIfNotFound: true);
+        m_Main_Run = m_Main.FindAction("Run", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -207,6 +228,7 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Main_MouseDelta;
     private readonly InputAction m_Main_InputDirection;
     private readonly InputAction m_Main_Interaction;
+    private readonly InputAction m_Main_Run;
     public struct MainActions
     {
         private @InputControls m_Wrapper;
@@ -214,6 +236,7 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
         public InputAction @MouseDelta => m_Wrapper.m_Main_MouseDelta;
         public InputAction @InputDirection => m_Wrapper.m_Main_InputDirection;
         public InputAction @Interaction => m_Wrapper.m_Main_Interaction;
+        public InputAction @Run => m_Wrapper.m_Main_Run;
         public InputActionMap Get() { return m_Wrapper.m_Main; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -232,6 +255,9 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
             @Interaction.started += instance.OnInteraction;
             @Interaction.performed += instance.OnInteraction;
             @Interaction.canceled += instance.OnInteraction;
+            @Run.started += instance.OnRun;
+            @Run.performed += instance.OnRun;
+            @Run.canceled += instance.OnRun;
         }
 
         private void UnregisterCallbacks(IMainActions instance)
@@ -245,6 +271,9 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
             @Interaction.started -= instance.OnInteraction;
             @Interaction.performed -= instance.OnInteraction;
             @Interaction.canceled -= instance.OnInteraction;
+            @Run.started -= instance.OnRun;
+            @Run.performed -= instance.OnRun;
+            @Run.canceled -= instance.OnRun;
         }
 
         public void RemoveCallbacks(IMainActions instance)
@@ -267,5 +296,6 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
         void OnMouseDelta(InputAction.CallbackContext context);
         void OnInputDirection(InputAction.CallbackContext context);
         void OnInteraction(InputAction.CallbackContext context);
+        void OnRun(InputAction.CallbackContext context);
     }
 }

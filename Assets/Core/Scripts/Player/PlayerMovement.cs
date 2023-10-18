@@ -16,7 +16,7 @@ public class PlayerMovement : PlayerModule
     public override void Tick()
     {
         base.Tick();
-        HandleMovement(); 
+        HandleMovement();
     }
 
 
@@ -40,8 +40,13 @@ public class PlayerMovement : PlayerModule
 
     private float GetSpeed()
     {
+        float targetSpeed = playerBaseSpeed;
+        
+        if (InputManager.Instance.RunFlag)
+        {
+            targetSpeed *= playerRunMultiplier;
+        }
 
-
-        return playerBaseSpeed;
+        return targetSpeed;
     }
 }
