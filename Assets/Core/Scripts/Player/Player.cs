@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -10,7 +11,7 @@ public class Player : MonoBehaviour
     public PlayerMadness playerMadness { get; private set; }
     public PlayerCameraControl playerCameraControl { get; private set; }
     public HeadBob headBob { get; private set; }
-
+    public CinemachineVirtualCamera virtualCamera;
     private void Start()
     {
         playerInteraction = GetComponent<PlayerInteraction>();

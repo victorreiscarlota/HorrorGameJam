@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: NoMadnessLevelData
   m_EditorClassIdentifier: Assembly-CSharp::MadnessLevelData
-  InvertedWorldDuration: 60
-  NormalWorldDuration: 60
+  InvertedWorldDuration: 15
+  NormalWorldDuration: 15
   PlayerSpeedMultiplier: 1

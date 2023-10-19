@@ -5,54 +5,60 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Events;
 
-public class Clock : MonoBehaviour
+public class Clock : Interactor
 {
+    [Header("Interaction")] //
+    [SerializeField]
+    private float interactionCooldown;
+
+    [SerializeField] private float maxDuration;
+    [SerializeField] private float interactionDurationIncrease;
     [SerializeField] private Transform NormalPointer;
     [SerializeField] private Transform InvertedPointer;
-    
+    [SerializeField] private float timeToMakeATurn;
+
+
+    private bool isInCooldown;
+    [SerializeField] private float remaningDuration;
     private float currentNormalRotation = 0.0f;
-    private float currentInvertedRotation = 0.0f;
     private float targetRotation = 360.0f;
 
-    [HideInInspector] public UnityEvent<bool> OnClockChange;
+    [HideInInspector] public UnityEvent OnClockChange;
     public bool normalClockEnabled;
-    public bool invertedClockEnabled;
-
-    private void Start()
+    
+    public override void Interact()
     {
-        OnClockChange = new UnityEvent<bool>();
+        base.Interact();
+
+        if (isInCooldown) return;
+        remaningDuration += interactionDurationIncrease;
+        remaningDuration = Mathf.Clamp(remaningDuration, 0, maxDuration);
+        StartCoroutine(InteractionCooldown());
     }
 
-    public void UpdateNormalClock(float duration)
+    IEnumerator InteractionCooldown()
     {
-        float rotationAmount = (targetRotation / duration) * Time.deltaTime;
+        isInCooldown = true;
+        yield return new WaitForSeconds(interactionCooldown);
+        isInCooldown = false;
+    }
+
+    public void UpdateNormalClock()
+    {
+        remaningDuration -= Time.deltaTime;
+        remaningDuration = Mathf.Clamp(remaningDuration, 0, maxDuration);
+        if (remaningDuration <= 0) return;
+        float rotationAmount = (targetRotation / timeToMakeATurn) * Time.deltaTime;
         currentNormalRotation += rotationAmount;
 
         if (currentNormalRotation >= targetRotation)
         {
-            normalClockEnabled = false;
-            invertedClockEnabled = true;
             currentNormalRotation = 0;
-            OnClockChange?.Invoke(true);
+            OnClockChange?.Invoke();
         }
 
 
         NormalPointer.Rotate(new Vector3(0, rotationAmount, 0));
-    }
-
-    public void UpdateInvertedClock(float duration)
-    {
-        float rotationAmount = (targetRotation / duration) * Time.deltaTime;
-        currentInvertedRotation += rotationAmount;
-
-        if (currentInvertedRotation >= targetRotation)
-        {
-            invertedClockEnabled = false;
-            normalClockEnabled = true;
-            OnClockChange?.Invoke(false);
-            currentInvertedRotation = 0;
-        }
-        
         InvertedPointer.Rotate(new Vector3(0, -rotationAmount, 0));
     }
 }

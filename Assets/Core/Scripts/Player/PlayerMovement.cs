@@ -19,8 +19,9 @@ public class PlayerMovement : PlayerModule
     public float MinSpeed{get ; private set;}
     public float MaxSpeed{get ; private set;}
 
-    private void Start()
+    public override void StartComponent()
     {
+        base.StartComponent();
         MinSpeed = playerBaseSpeed;
         MaxSpeed = playerBaseSpeed * playerRunMultiplier;
     }
@@ -77,6 +78,6 @@ public class PlayerMovement : PlayerModule
         
         float newFOV = Mathf.Lerp(minFOV, maxFOV, normalizedSpeed);
         
-        Camera.main.fieldOfView = newFOV;
+        ThisPlayer.virtualCamera.m_Lens.FieldOfView = newFOV;
     }
 }

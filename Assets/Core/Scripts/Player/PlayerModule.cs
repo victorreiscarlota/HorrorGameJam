@@ -10,6 +10,12 @@ public class PlayerModule : MonoBehaviour
     private void Start()
     {
         ThisPlayer = GetComponent<Player>();
+        StartComponent();
+    }
+
+    public virtual void StartComponent()
+    {
+        
     }
 
     public virtual void Tick()
