@@ -5,25 +5,29 @@ using UnityEditor;
 using Cinemachine;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
+
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-    
+
     [SerializeField] private Director director;
     [SerializeField] private GameFlow gameFlow;
 
     [Header("Clock")] //
     [SerializeField] private Clock centerClock;
+
     public bool IsClockActive { get; private set; }
-    
-    [Header("VFX")] [SerializeField] private CinemachineImpulseSource cameraShakeSource;
+
+    [Header("VFX")]
+    [SerializeField] private CinemachineImpulseSource cameraShakeSource;
 
     //Getter and Setters
     public GameState CurrentGameState { get; private set; }
     public MadnessLevelData CurrentMadnessLevelData { get; private set; }
-
+    [HideInInspector] public UnityEvent OnPauseGame;
+    [HideInInspector] public UnityEvent OnResumeGame;
+    [SerializeField] public bool isDirectorActive;
 
     #region Unity Functions
 
@@ -35,6 +39,9 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         UnpauseGame();
+        OnPauseGame = new UnityEvent();
+        OnResumeGame = new UnityEvent();
+
         InputManager.Instance.EscapeTrigger.AddListener(ChangeGameState);
         CurrentMadnessLevelData = gameFlow.NoMadnessLevel;
         IsClockActive = true;
@@ -49,7 +56,12 @@ public class GameManager : MonoBehaviour
         if (CurrentGameState != GameState.Running) return;
 
         TimeManager();
-        director.HandleDirector();
+        if (isDirectorActive) director.HandleDirector();
+    }
+
+    private void FixedUpdate()
+    {
+        if (CurrentGameState != GameState.Running) return;
     }
 
     #endregion
@@ -66,6 +78,7 @@ public class GameManager : MonoBehaviour
 
     public void PauseGame()
     {
+        OnPauseGame?.Invoke();
         CurrentGameState = GameState.Stopped;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -75,6 +88,7 @@ public class GameManager : MonoBehaviour
 
     public void UnpauseGame()
     {
+        OnResumeGame?.Invoke();
         CurrentGameState = GameState.Running;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -84,11 +98,11 @@ public class GameManager : MonoBehaviour
 
     public void QuitGame()
     {
-        #if UNITY_EDITOR
-            EditorApplication.isPlaying = false;
-        #else
+#if UNITY_EDITOR
+        EditorApplication.isPlaying = false;
+#else
             Application.Quit();
-        #endif
+#endif
     }
 
     #endregion
@@ -135,9 +149,6 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion
-    
-
-
 }
 
 
@@ -146,4 +157,3 @@ public enum GameState
     Running,
     Stopped,
 }
-

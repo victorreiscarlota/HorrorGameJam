@@ -8,16 +8,8 @@ public class Entity : MonoBehaviour
 {
     [Header("Main")] [SerializeField] private NavMeshAgent agent;
     private NavMeshPath currentPath;
-    public EntityBehaviourState CurrentEntityBehaviourState { get; set; }
-
-    [Header("Config")] //
-    [SerializeField] private float pathUpdateFrequency;
-
-
-    [Header("Debug")] //
-    [SerializeField] private bool debugFollowTarget;
-
-    [SerializeField] private Transform debugTarget;
+    
+    
     private Vector3 destinationPosition;
 
 
@@ -27,6 +19,8 @@ public class Entity : MonoBehaviour
     {
         pathTimer = 0;
         StartPath();
+        GameManager.Instance.OnPauseGame.AddListener(PauseEntity);
+        GameManager.Instance.OnResumeGame.AddListener(ResumeEntity);
     }
 
     private void StartPath()
@@ -45,10 +39,32 @@ public class Entity : MonoBehaviour
 
         return false;
     }
-
-    public void SetEntityEnabled(bool value)
+    
+    public void PauseEntity()
     {
-        agent.isStopped = value;
+        agent.isStopped = true;
+        agent.updateRotation = false;
+    }
+
+    public void ResumeEntity()
+    {
+        agent.isStopped = false;
+        agent.updateRotation = true;
+    }
+
+    public bool IsStopped()
+    {
+        return agent.isStopped;
+    }
+
+    public bool IsPathObstructed()
+    {
+        return agent.pathStatus == NavMeshPathStatus.PathPartial || agent.pathStatus == NavMeshPathStatus.PathInvalid || agent.isPathStale;
+    }
+
+    public bool IsMoving()
+    {
+        return agent.velocity.sqrMagnitude > 0.1f;
     }
 }
 
@@ -58,4 +74,5 @@ public enum EntityBehaviourState
     Chasing,
     Searching,
     Patrolling,
+    Attacking,
 }

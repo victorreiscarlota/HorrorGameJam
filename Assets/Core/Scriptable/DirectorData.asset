@@ -12,11 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bcf9e0674d70284ea395e690d7d8590, type: 3}
   m_Name: DirectorData
   m_EditorClassIdentifier: 
-  frequencyToTryUsePoints: 5
   frequencyToTakePatrolAction: 2
   chanceToTakePatrolAction: 100
-  pointsPerSecond: 5
-  maxEntityPoints: 500
-  PositionWeight: 0
-  PositionCost: 100
-  PositionCooldown: 30
+  chaseFrequencyUpdate: 0.666
+  timeBeforeLosingAggro: 7
+  behaviourWeights: 0000000003000000030000000200000002000000
+  timeBetweenIddleUpdates: 1
+  searchUpdateTime: 1
+  searchFreeRadius: 12
+  timeOutSearchTime: 2.5
+  minAttemptsSearchOnAlert: 2
+  maxAttemptsSearchOnAlert: 5
+  maxLookoutDuration: 35
+  maxLookoutTime: 2.5
+  minLookoutTime: 4
+  minLookoutDirections: 1
+  maxLookoutDirections: 1
+  lookoutTurnSpeed: 0.75
+  maxAngleToCountDirection: 7
+  zoneMaxWeight: 5
+  zoneDistanceRatio: 25
