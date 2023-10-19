@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,15 +12,13 @@ public class UIManager : MonoBehaviour
         if (!Instance) Instance = this;
     }
 
-
     [SerializeField] private GameObject mainCanvas;
     [SerializeField] private GameObject hudParent;
     [SerializeField] private GameObject inGameMenus;
 
 
     //Crosshair
-    [Header("Crosshair")] 
-    [SerializeField] private Transform crosshairTransform;
+    [Header("Crosshair")] [SerializeField] private Transform crosshairTransform;
 
     [SerializeField, Range(1, 1.5f)] private float crosshairInteractionSize;
 

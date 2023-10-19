@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using Cinemachine;
 using UnityEngine;
 using UnityEngine.Events;
@@ -66,17 +67,9 @@ public class GameManager : MonoBehaviour
     private void ChangeGameState()
     {
         if (CurrentGameState == GameState.Running)
-        {
             PauseGame();
-            UIManager.Instance.ChangeHUDState(false);
-            UIManager.Instance.ChangeMenusState(true);
-        }
         else
-        {
             UnpauseGame();
-            UIManager.Instance.ChangeHUDState(true);
-            UIManager.Instance.ChangeMenusState(false);
-        }
     }
 
     public void PauseGame()
@@ -84,6 +77,8 @@ public class GameManager : MonoBehaviour
         CurrentGameState = GameState.Stopped;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        UIManager.Instance.ChangeHUDState(false);
+        UIManager.Instance.ChangeMenusState(true);
     }
 
     public void UnpauseGame()
@@ -91,6 +86,17 @@ public class GameManager : MonoBehaviour
         CurrentGameState = GameState.Running;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        UIManager.Instance.ChangeHUDState(true);
+        UIManager.Instance.ChangeMenusState(false);
+    }
+
+    public void QuitGame()
+    {
+        #if UNITY_EDITOR
+            EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
 
     #endregion
