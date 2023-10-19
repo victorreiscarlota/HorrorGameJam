@@ -23,9 +23,15 @@ public class Clock : Interactor
     private float currentNormalRotation = 0.0f;
     private float targetRotation = 360.0f;
 
-    [HideInInspector] public UnityEvent OnClockChange;
-    public bool normalClockEnabled;
-    
+    [HideInInspector] public UnityEvent OnDurationEnd;
+    [HideInInspector] public UnityEvent OnNewDuration;
+
+    public void StartClock()
+    {
+        OnDurationEnd = new UnityEvent();
+        OnNewDuration = new UnityEvent();
+    }
+
     public override void Interact()
     {
         base.Interact();
@@ -43,18 +49,28 @@ public class Clock : Interactor
         isInCooldown = false;
     }
 
-    public void UpdateNormalClock()
+    public void UpdateClock()
     {
+        if (!GameManager.Instance.IsClockActive)
+        {
+            if (remaningDuration > 0) OnNewDuration?.Invoke();
+        }
+
         remaningDuration -= Time.deltaTime;
         remaningDuration = Mathf.Clamp(remaningDuration, 0, maxDuration);
+        if (remaningDuration <= 0 && GameManager.Instance.IsClockActive)
+        {
+            OnDurationEnd?.Invoke();
+        }
+
         if (remaningDuration <= 0) return;
+        
         float rotationAmount = (targetRotation / timeToMakeATurn) * Time.deltaTime;
         currentNormalRotation += rotationAmount;
 
         if (currentNormalRotation >= targetRotation)
         {
             currentNormalRotation = 0;
-            OnClockChange?.Invoke();
         }
 
 

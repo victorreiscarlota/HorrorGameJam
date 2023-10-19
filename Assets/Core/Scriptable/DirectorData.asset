@@ -12,7 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bcf9e0674d70284ea395e690d7d8590, type: 3}
   m_Name: DirectorData
   m_EditorClassIdentifier: 
+  frequencyToTryUsePoints: 5
+  frequencyToTakePatrolAction: 2
+  chanceToTakePatrolAction: 100
   pointsPerSecond: 5
   maxEntityPoints: 500
+  PositionWeight: 0
   PositionCost: 100
   PositionCooldown: 30

@@ -5,26 +5,19 @@ using UnityEditor;
 using Cinemachine;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-
-
-    [SerializeField] private Player player;
-    [SerializeField] private Entity entity;
+    
+    [SerializeField] private Director director;
     [SerializeField] private GameFlow gameFlow;
 
+    [Header("Clock")] //
     [SerializeField] private Clock centerClock;
-    [SerializeField] private bool isClockActive;
-
-    [Header("Director")] //
-    [SerializeField]
-    private Director directorData;
-
-    [SerializeField] private float currentEntityPoints;
-    private float pointsTimer;
-
+    public bool IsClockActive { get; private set; }
+    
     [Header("VFX")] [SerializeField] private CinemachineImpulseSource cameraShakeSource;
 
     //Getter and Setters
@@ -44,12 +37,11 @@ public class GameManager : MonoBehaviour
         UnpauseGame();
         InputManager.Instance.EscapeTrigger.AddListener(ChangeGameState);
         CurrentMadnessLevelData = gameFlow.NoMadnessLevel;
-        centerClock.normalClockEnabled = true;
-        centerClock.OnClockChange = new UnityEvent();
-        centerClock.OnClockChange.AddListener(ClockUpdate);
-        currentEntityPoints = 0;
-        pointsTimer = 0;
-        entity.StartEntity();
+        IsClockActive = true;
+        centerClock.StartClock();
+        centerClock.OnDurationEnd.AddListener(OnClockDurationEnd);
+        centerClock.OnNewDuration.AddListener(OnNewClockDuration);
+        director.StartDirector();
     }
 
     private void Update()
@@ -57,7 +49,7 @@ public class GameManager : MonoBehaviour
         if (CurrentGameState != GameState.Running) return;
 
         TimeManager();
-        HandleDirector();
+        director.HandleDirector();
     }
 
     #endregion
@@ -124,47 +116,28 @@ public class GameManager : MonoBehaviour
 
     private void TimeManager()
     {
-        if (!isClockActive) return;
-
-        if (centerClock.normalClockEnabled) centerClock.UpdateNormalClock();
+        centerClock.UpdateClock();
     }
 
-    private void ClockUpdate()
+    private void OnClockDurationEnd()
     {
-        Debug.Log("ClockChange");
+        Debug.Log("TimeEnd");
         cameraShakeSource.GenerateImpulseWithForce(0.65f);
+        director.UpdateEntityState(EntityState.Agressive);
+        IsClockActive = false;
+    }
+
+    private void OnNewClockDuration()
+    {
+        Debug.Log("TimeStart");
+        director.UpdateEntityState(EntityState.Normal);
+        IsClockActive = true;
     }
 
     #endregion
+    
 
-    #region Director
 
-    private void HandleDirector()
-    {
-        pointsTimer += Time.deltaTime;
-
-        if (pointsTimer >= 1)
-        {
-            pointsTimer = 0;
-            currentEntityPoints += directorData.pointsPerSecond;
-
-            currentEntityPoints = Mathf.Clamp(currentEntityPoints, 0, directorData.maxEntityPoints);
-        }
-
-        entity.UpdateEntity();
-    }
-
-    #endregion
-
-    private void EntityShop(EntityBuyableConsumable consumableToBuy)
-    {
-        switch (consumableToBuy)
-        {
-            case EntityBuyableConsumable.PlayerPosition:
-                entity.MoveTowardPosition(player.transform.position);
-                break;
-        }
-    }
 }
 
 
@@ -173,3 +146,4 @@ public enum GameState
     Running,
     Stopped,
 }
+

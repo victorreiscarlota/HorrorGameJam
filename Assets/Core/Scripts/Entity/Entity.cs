@@ -8,17 +8,18 @@ public class Entity : MonoBehaviour
 {
     [Header("Main")] [SerializeField] private NavMeshAgent agent;
     private NavMeshPath currentPath;
-    public EntityState CurrentEntityState { get; private set; }
+    public EntityBehaviourState CurrentEntityBehaviourState { get; set; }
+
     [Header("Config")] //
     [SerializeField] private float pathUpdateFrequency;
-    
+
 
     [Header("Debug")] //
     [SerializeField] private bool debugFollowTarget;
 
     [SerializeField] private Transform debugTarget;
     private Vector3 destinationPosition;
-    
+
 
     private float pathTimer;
 
@@ -26,20 +27,6 @@ public class Entity : MonoBehaviour
     {
         pathTimer = 0;
         StartPath();
-    }
-
-    public void UpdateEntity()
-    {
-        pathTimer += Time.deltaTime;
-
-        if (pathTimer >= pathUpdateFrequency)
-        {
-            pathTimer = 0;
-            if (debugFollowTarget)
-            {
-                MoveTowardPosition(debugTarget.position);
-            }
-        }
     }
 
     private void StartPath()
@@ -59,17 +46,13 @@ public class Entity : MonoBehaviour
         return false;
     }
 
-    
+    public void SetEntityEnabled(bool value)
+    {
+        agent.isStopped = value;
+    }
 }
 
-
-public enum EntityBuyableConsumable
-{
-    None,
-    PlayerPosition,
-}
-
-public enum EntityState
+public enum EntityBehaviourState
 {
     Iddle,
     Chasing,
