@@ -71,6 +71,15 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Crouch"",
+                    ""type"": ""Button"",
+                    ""id"": ""8365b98a-d5a0-4616-983b-bf57e24923a0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -172,6 +181,17 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
                     ""action"": ""Escape"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2b9261db-d95a-40e3-b2d5-f3de907389be"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -185,6 +205,7 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
         m_Main_Interaction = m_Main.FindAction("Interaction", throwIfNotFound: true);
         m_Main_Run = m_Main.FindAction("Run", throwIfNotFound: true);
         m_Main_Escape = m_Main.FindAction("Escape", throwIfNotFound: true);
+        m_Main_Crouch = m_Main.FindAction("Crouch", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -251,6 +272,7 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Main_Interaction;
     private readonly InputAction m_Main_Run;
     private readonly InputAction m_Main_Escape;
+    private readonly InputAction m_Main_Crouch;
     public struct MainActions
     {
         private @InputControls m_Wrapper;
@@ -260,6 +282,7 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
         public InputAction @Interaction => m_Wrapper.m_Main_Interaction;
         public InputAction @Run => m_Wrapper.m_Main_Run;
         public InputAction @Escape => m_Wrapper.m_Main_Escape;
+        public InputAction @Crouch => m_Wrapper.m_Main_Crouch;
         public InputActionMap Get() { return m_Wrapper.m_Main; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -284,6 +307,9 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
             @Escape.started += instance.OnEscape;
             @Escape.performed += instance.OnEscape;
             @Escape.canceled += instance.OnEscape;
+            @Crouch.started += instance.OnCrouch;
+            @Crouch.performed += instance.OnCrouch;
+            @Crouch.canceled += instance.OnCrouch;
         }
 
         private void UnregisterCallbacks(IMainActions instance)
@@ -303,6 +329,9 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
             @Escape.started -= instance.OnEscape;
             @Escape.performed -= instance.OnEscape;
             @Escape.canceled -= instance.OnEscape;
+            @Crouch.started -= instance.OnCrouch;
+            @Crouch.performed -= instance.OnCrouch;
+            @Crouch.canceled -= instance.OnCrouch;
         }
 
         public void RemoveCallbacks(IMainActions instance)
@@ -327,5 +356,6 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
         void OnInteraction(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
         void OnEscape(InputAction.CallbackContext context);
+        void OnCrouch(InputAction.CallbackContext context);
     }
 }

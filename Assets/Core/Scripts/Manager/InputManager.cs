@@ -12,6 +12,7 @@ public class InputManager : MonoBehaviour
     public Vector2 MouseDelta { get; private set; }
     public Vector2 InputDirection { get; private set; }
     public bool RunFlag { get; private set; }
+    public bool CrouchFlag { get; private set; }
     [HideInInspector] public UnityEvent EscapeTrigger;
     [HideInInspector] public UnityEvent InteractionTrigger;
 
@@ -37,7 +38,10 @@ public class InputManager : MonoBehaviour
 
             playerInput.Main.Run.started += ctx => RunFlag = true;
             playerInput.Main.Run.canceled += ctx => RunFlag = false;
-
+            
+            playerInput.Main.Crouch.started += ctx => CrouchFlag = true;
+            playerInput.Main.Crouch.canceled += ctx => CrouchFlag = false;
+            
             playerInput.Main.Escape.performed += ctx => EscapeTrigger?.Invoke();
         }
 
