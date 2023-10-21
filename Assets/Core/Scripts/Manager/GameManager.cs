@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Director director;
     [SerializeField] private GameFlow gameFlow;
 
-    [Header("Clock")] //
+    [Header("Clock")]
     [SerializeField] private Clock centerClock;
 
     public bool IsClockActive;
@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         UIManager.Instance.ChangeHUDState(false);
-        UIManager.Instance.ChangeMenusState(true);
+        UIManager.Instance.ChangeMenusState(true, false);
     }
 
     public void UnpauseGame()
@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         UIManager.Instance.ChangeHUDState(true);
-        UIManager.Instance.ChangeMenusState(false);
+        UIManager.Instance.ChangeMenusState(false, false);
     }
 
     public void QuitGame()
