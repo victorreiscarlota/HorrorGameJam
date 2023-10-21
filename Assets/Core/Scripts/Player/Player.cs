@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     public PlayerMovement playerMovement { get; private set; }
     public PlayerMadness playerMadness { get; private set; }
     public PlayerCameraControl playerCameraControl { get; private set; }
+    public PlayerFootsteps playerFootsteps { get; private set; }
     public HeadBob headBob { get; private set; }
     public CinemachineVirtualCamera virtualCamera;
     [SerializeField] private Animator handAnim;
@@ -17,6 +18,7 @@ public class Player : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         playerMadness = GetComponent<PlayerMadness>();
         playerCameraControl = GetComponent<PlayerCameraControl>();
+        playerFootsteps = GetComponent<PlayerFootsteps>();
         headBob = GetComponent<HeadBob>();
     }
 
@@ -31,6 +33,7 @@ public class Player : MonoBehaviour
 
         handAnim.speed = 1;
         playerCameraControl.Tick();
+        playerFootsteps.Tick();
         playerMovement.Tick();
         headBob.Tick();
 
