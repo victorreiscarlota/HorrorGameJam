@@ -36,8 +36,8 @@ public class PlayerMovement : PlayerModule
 
     [SerializeField] private float maxFOV;
     public Vector3 Velocity { get; private set; }
-    private Vector2 horizontalVelocity;
-    private float currentSpeed;
+    public Vector2 horizontalVelocity;
+    public float currentSpeed;
     public float MinSpeed { get; private set; }
     public float MaxSpeed { get; private set; }
 

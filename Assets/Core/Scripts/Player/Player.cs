@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
 
@@ -12,6 +9,8 @@ public class Player : MonoBehaviour
     public PlayerCameraControl playerCameraControl { get; private set; }
     public HeadBob headBob { get; private set; }
     public CinemachineVirtualCamera virtualCamera;
+    [SerializeField] private Animator handAnim;
+
     private void Start()
     {
         playerInteraction = GetComponent<PlayerInteraction>();
@@ -24,10 +23,18 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance.CurrentGameState != GameState.Running) return;
+        if (GameManager.Instance.CurrentGameState != GameState.Running)
+        {
+            handAnim.speed = 0;
+            return;
+        }
+
+        handAnim.speed = 1;
         playerCameraControl.Tick();
         playerMovement.Tick();
         headBob.Tick();
+
+        handAnim.SetFloat("MoveAmount", playerMovement.currentSpeed);
     }
 
     private void FixedUpdate()
