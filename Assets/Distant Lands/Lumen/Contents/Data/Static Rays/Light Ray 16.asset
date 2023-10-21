@@ -16,7 +16,7 @@ MonoBehaviour:
   - rayShape: 18
     rayMesh: {fileID: 0}
     brightness: 1
-    colorMultiplier: {r: 1, g: 1, b: 1, a: 1}
+    colorMultiplier: {r: 1, g: 0.4764151, b: 0.7071016, a: 1}
     position: {x: 0, y: 0, z: 0}
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 1, y: 1, z: 1}
@@ -32,7 +32,7 @@ MonoBehaviour:
   showMainSettings: 1
   showVariationSettings: 0
   showFadingSettings: 0
-  needsToBeUpdated: 1
+  needsToBeUpdated: 0
   useCameraDepthFade: 1
   cameraDepthFadeStart: 1
   cameraDepthFadeEnd: 3

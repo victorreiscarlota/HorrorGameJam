@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private Director director;
     [SerializeField] private GameFlow gameFlow;
+    [SerializeField] private int maxLives;
+    private int remaingLives;
 
     [Header("Clock")]
     [SerializeField] private Clock centerClock;
@@ -29,6 +31,8 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public UnityEvent OnResumeGame;
     [SerializeField] public bool isDirectorActive;
 
+    [SerializeField] private List<Transform> teleportPositions;
+
     #region Unity Functions
 
     private void Awake()
@@ -41,7 +45,7 @@ public class GameManager : MonoBehaviour
         UnpauseGame();
         OnPauseGame = new UnityEvent();
         OnResumeGame = new UnityEvent();
-
+        remaingLives = maxLives;
         InputManager.Instance.EscapeTrigger.AddListener(ChangeGameState);
         CurrentMadnessLevelData = gameFlow.NoMadnessLevel;
         IsClockActive = true;
@@ -94,6 +98,41 @@ public class GameManager : MonoBehaviour
         Cursor.visible = false;
         UIManager.Instance.ChangeHUDState(true);
         UIManager.Instance.ChangeMenusState(false, false);
+    }
+
+    public void StartEntityAttack()
+    {
+        director.player.PausePlayerControl();
+
+        if (remaingLives > 1) director.player.StartDamageAnimation();
+        else director.player.StartDeathAnimation();
+    }
+
+    public void EndEntityAttack()
+    {
+        director.OnAttackEnd();
+        TeleportPlayerToFarthestPos();
+        director.player.ResumePlayerControl();
+        remaingLives--;
+    }
+
+    private void TeleportPlayerToFarthestPos()
+    {
+        Transform tpPoint = teleportPositions[0];
+        float lastDistance = 0;
+        for (int i = 0; i < teleportPositions.Count - 1; i++)
+        {
+            if (Vector3.Distance(teleportPositions[i].position, director.player.transform.position) > lastDistance)
+            {
+                tpPoint = teleportPositions[i];
+            }
+        }
+
+        director.player.transform.position = tpPoint.position;
+    }
+
+    public void ReturnToMainMenu()
+    {
     }
 
     public void QuitGame()

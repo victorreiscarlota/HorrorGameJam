@@ -8,8 +8,8 @@ public class Entity : MonoBehaviour
 {
     [Header("Main")] [SerializeField] private NavMeshAgent agent;
     private NavMeshPath currentPath;
-    
-    
+    [SerializeField] private Animator anim;
+
     private Vector3 destinationPosition;
 
 
@@ -39,7 +39,12 @@ public class Entity : MonoBehaviour
 
         return false;
     }
-    
+
+    public void PlayAnimation(string parameter)
+    {
+        anim.Play(parameter);
+    }
+
     public void PauseEntity()
     {
         agent.isStopped = true;

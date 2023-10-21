@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     public HeadBob headBob { get; private set; }
     public CinemachineVirtualCamera virtualCamera;
     [SerializeField] private Animator handAnim;
+    public bool IsPlayerPaused { get; private set; }
 
     private void Start()
     {
@@ -31,6 +32,12 @@ public class Player : MonoBehaviour
             return;
         }
 
+        if (IsPlayerPaused)
+        {
+            handAnim.speed = 0;
+            return;
+        }
+
         handAnim.speed = 1;
         playerCameraControl.Tick();
         playerFootsteps.Tick();
@@ -44,5 +51,23 @@ public class Player : MonoBehaviour
     {
         if (GameManager.Instance.CurrentGameState != GameState.Running) return;
         playerInteraction.FixedTick();
+    }
+
+    public void PausePlayerControl()
+    {
+        IsPlayerPaused = true;
+    }
+
+    public void ResumePlayerControl()
+    {
+        IsPlayerPaused = false;
+    }
+
+    public void StartDamageAnimation()
+    {
+    }
+
+    public void StartDeathAnimation()
+    {
     }
 }

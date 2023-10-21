@@ -17,14 +17,14 @@ MonoBehaviour:
     flareMesh: {fileID: 0}
     scale: 1.03
     brightness: 0.164
-    colorMultiplier: {r: 1, g: 1, b: 1, a: 1}
-    open: 0
+    colorMultiplier: {r: 0.8784314, g: 1, b: 0, a: 1}
+    open: 1
   - flareShape: 20
     flareMesh: {fileID: 0}
     scale: 1.03
     brightness: 0.167
-    colorMultiplier: {r: 1, g: 1, b: 1, a: 1}
-    open: 0
+    colorMultiplier: {r: 0.8784314, g: 1, b: 0, a: 1}
+    open: 1
   flareMaterial: {fileID: 2100000, guid: 7724528df85009d4dadb42eb105e754e, type: 2}
   globalScale: 1
   globalBrightness: 1

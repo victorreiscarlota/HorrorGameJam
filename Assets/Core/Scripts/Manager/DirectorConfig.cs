@@ -8,13 +8,13 @@ public class DirectorConfig : ScriptableObject
 {
     [Header("EntityBehaviour")] //
     public float frequencyToUpdatePatrolAction = 2;
-
     public float distanceToForcePatrol = 35f;
     public int chanceToTakePatrolAction = 100;
 
     [Header("Chasing Behaviour")]
     public float chaseFrequencyUpdate = 0.666f;
 
+    public float minDistanceToAttack;
     public float chaseLookAheadTime = 2;
     public float timeBeforeLosingAggro = 15;
 

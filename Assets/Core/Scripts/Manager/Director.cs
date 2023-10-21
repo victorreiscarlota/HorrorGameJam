@@ -11,9 +11,11 @@ public class Director : MonoBehaviour
     [SerializeField]
     private DirectorConfig directorConfigData;
 
+    [SerializeField] private bool debugMode;
+
     public EntityBehaviourState CurrentEntityBehaviourState { get; set; }
     public EntityBehaviourState LastEntityBehaviourState { get; set; }
-    [SerializeField] private Player player;
+    [SerializeField] public Player player;
     [SerializeField] private Entity entity;
     [SerializeField] private InterestPoint[] interestPoints;
     [SerializeField] public EntityState CurrentEntityState;
@@ -144,6 +146,8 @@ public class Director : MonoBehaviour
             case EntityBehaviourState.Patrolling:
                 break;
             case EntityBehaviourState.Attacking:
+                entity.PauseEntity();
+                entity.PlayAnimation("Attack");
                 break;
         }
 
@@ -167,6 +171,7 @@ public class Director : MonoBehaviour
                 currentInterestPoint = null;
                 break;
             case EntityBehaviourState.Attacking:
+                entity.ResumeEntity();
                 break;
         }
 
@@ -202,12 +207,23 @@ public class Director : MonoBehaviour
 
         if (chaseTimer >= directorConfigData.chaseFrequencyUpdate)
         {
+            if (Vector3.Distance(entity.transform.position, player.transform.position) < directorConfigData.minDistanceToAttack)
+            {
+                EnterState(EntityBehaviourState.Attacking);
+            }
+
             chaseTimer = 0;
             playerLastTrace = player.transform.position;
             entity.MoveTowardPosition(playerLastTrace + player.playerMovement.Velocity.normalized * directorConfigData.chaseLookAheadTime);
         }
 
+
         ChaseDetectionHandle();
+    }
+
+    public void OnAttackEnd()
+    {
+        EnterState(EntityBehaviourState.Iddle);
     }
 
     private void Searching()
@@ -427,6 +443,7 @@ public class Director : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
+        if (!debugMode) return;
         Handles.color = Color.red;
         Handles.Label(entity.transform.position + Vector3.up * 1.65f, CurrentEntityBehaviourState.ToString());
         Handles.color = Color.blue;

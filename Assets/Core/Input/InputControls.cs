@@ -80,6 +80,15 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RightClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""b7f6440c-6384-4832-8205-8bcad9b071a6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -192,6 +201,17 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
                     ""action"": ""Crouch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ce91d9fb-0b55-4181-ae13-6b7387b010f1"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -206,6 +226,7 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
         m_Main_Run = m_Main.FindAction("Run", throwIfNotFound: true);
         m_Main_Escape = m_Main.FindAction("Escape", throwIfNotFound: true);
         m_Main_Crouch = m_Main.FindAction("Crouch", throwIfNotFound: true);
+        m_Main_RightClick = m_Main.FindAction("RightClick", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -273,6 +294,7 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Main_Run;
     private readonly InputAction m_Main_Escape;
     private readonly InputAction m_Main_Crouch;
+    private readonly InputAction m_Main_RightClick;
     public struct MainActions
     {
         private @InputControls m_Wrapper;
@@ -283,6 +305,7 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
         public InputAction @Run => m_Wrapper.m_Main_Run;
         public InputAction @Escape => m_Wrapper.m_Main_Escape;
         public InputAction @Crouch => m_Wrapper.m_Main_Crouch;
+        public InputAction @RightClick => m_Wrapper.m_Main_RightClick;
         public InputActionMap Get() { return m_Wrapper.m_Main; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -310,6 +333,9 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
             @Crouch.started += instance.OnCrouch;
             @Crouch.performed += instance.OnCrouch;
             @Crouch.canceled += instance.OnCrouch;
+            @RightClick.started += instance.OnRightClick;
+            @RightClick.performed += instance.OnRightClick;
+            @RightClick.canceled += instance.OnRightClick;
         }
 
         private void UnregisterCallbacks(IMainActions instance)
@@ -332,6 +358,9 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
             @Crouch.started -= instance.OnCrouch;
             @Crouch.performed -= instance.OnCrouch;
             @Crouch.canceled -= instance.OnCrouch;
+            @RightClick.started -= instance.OnRightClick;
+            @RightClick.performed -= instance.OnRightClick;
+            @RightClick.canceled -= instance.OnRightClick;
         }
 
         public void RemoveCallbacks(IMainActions instance)
@@ -357,5 +386,6 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
         void OnRun(InputAction.CallbackContext context);
         void OnEscape(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
+        void OnRightClick(InputAction.CallbackContext context);
     }
 }
