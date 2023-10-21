@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject mainCanvas;
     [SerializeField] private GameObject hudParent;
     [SerializeField] private GameObject inGameMenus;
+    [SerializeField] private GameObject inGameSettings;
 
 
     //Crosshair
@@ -27,9 +28,20 @@ public class UIManager : MonoBehaviour
         hudParent.SetActive(state);
     }
 
-    public void ChangeMenusState(bool state)
+    public void ChangeMenusState(bool menuState, bool settingsState)
     {
-        inGameMenus.SetActive(state);
+        inGameMenus.SetActive(menuState);
+        inGameSettings.SetActive(settingsState);
+    }
+
+    public void OpenSettingsMenu()
+    {
+        ChangeMenusState(false, true);
+    }
+
+    public void CloseSettingsMenu()
+    {
+        ChangeMenusState(true, false);
     }
 
     public void UpdateCrosshairScale(bool hasInteractor)
