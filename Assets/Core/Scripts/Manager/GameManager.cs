@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     [Header("Clock")] //
     [SerializeField] private Clock centerClock;
 
-    public bool IsClockActive { get; private set; }
+    public bool IsClockActive;
 
     [Header("VFX")]
     [SerializeField] private CinemachineImpulseSource cameraShakeSource;

@@ -7,17 +7,19 @@ using UnityEngine.Serialization;
 public class DirectorConfig : ScriptableObject
 {
     [Header("EntityBehaviour")] //
-    public float frequencyToTakePatrolAction = 2;
+    public float frequencyToUpdatePatrolAction = 2;
 
+    public float distanceToForcePatrol = 35f;
     public int chanceToTakePatrolAction = 100;
 
     [Header("Chasing Behaviour")]
     public float chaseFrequencyUpdate = 0.666f;
 
+    public float chaseLookAheadTime = 2;
     public float timeBeforeLosingAggro = 15;
 
     [Header("Iddle Behaviour")]
-    public List<EntityBehaviourState> behaviourWeights;
+    public List<EntityBehaviourState> behaviours;
 
     public float timeBetweenIddleUpdates = 1;
 

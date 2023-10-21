@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bcf9e0674d70284ea395e690d7d8590, type: 3}
   m_Name: DirectorData
   m_EditorClassIdentifier: 
-  frequencyToTakePatrolAction: 2
+  frequencyToUpdatePatrolAction: 2
+  distanceToForcePatrol: 35
   chanceToTakePatrolAction: 100
-  chaseFrequencyUpdate: 0.666
+  chaseFrequencyUpdate: 0.333
+  chaseLookAheadTime: 15
   timeBeforeLosingAggro: 7
-  behaviourWeights: 0000000003000000030000000200000002000000
+  behaviours: 00000000030000000300000002000000
   timeBetweenIddleUpdates: 1
   searchUpdateTime: 1
   searchFreeRadius: 12

@@ -17,7 +17,7 @@ public class Director : MonoBehaviour
     [SerializeField] private Entity entity;
     [SerializeField] private InterestPoint[] interestPoints;
     [SerializeField] public EntityState CurrentEntityState;
-
+    private List<EntityBehaviourState> weightedBehaviour;
     InterestPoint currentInterestPoint;
     float patrollingActionTimer;
     float searchTimer;
@@ -44,6 +44,8 @@ public class Director : MonoBehaviour
     private Vector3 playerLastTrace;
     private bool isTargetVisible;
 
+    private RangeSensor rangeSensor;
+
     public void StartDirector()
     {
         entity.StartEntity();
@@ -57,7 +59,9 @@ public class Director : MonoBehaviour
     public void HandleDirector()
     {
         StateMachine();
-        UpdateZonesWeights();
+        UpdateWeights();
+        if (isTargetVisible) timeSinceLastSawPlayer = 0;
+        else timeSinceLastSawPlayer += Time.deltaTime;
     }
 
 
@@ -78,7 +82,7 @@ public class Director : MonoBehaviour
         playerLastTrace = player.transform.position;
     }
 
-    void DetectionHandle()
+    void ChaseDetectionHandle()
     {
         if (!isTargetVisible)
         {
@@ -134,7 +138,7 @@ public class Director : MonoBehaviour
                 break;
             case EntityBehaviourState.Searching:
                 remaingSearchAttempts = Random.Range(directorConfigData.minAttemptsSearchOnAlert, directorConfigData.maxAttemptsSearchOnAlert);
-                startingSearchPosition = entity.transform.position;
+                startingSearchPosition = LastEntityBehaviourState == EntityBehaviourState.Chasing ? playerLastTrace : entity.transform.position;
                 SearchRandomPointInCloseArea();
                 break;
             case EntityBehaviourState.Patrolling:
@@ -160,6 +164,7 @@ public class Director : MonoBehaviour
                 StopCoroutine(SearchLookout());
                 break;
             case EntityBehaviourState.Patrolling:
+                currentInterestPoint = null;
                 break;
             case EntityBehaviourState.Attacking:
                 break;
@@ -176,12 +181,17 @@ public class Director : MonoBehaviour
 
         if (iddleTimer >= directorConfigData.timeBetweenIddleUpdates)
         {
-            iddleTimer = 0;
-            int randomState = Random.Range(0, directorConfigData.behaviourWeights.Count - 1);
-
-            if (directorConfigData.behaviourWeights[randomState] != CurrentEntityBehaviourState)
+            if (Vector3.Distance(entity.transform.position, player.transform.position) >= directorConfigData.distanceToForcePatrol)
             {
-                EnterState(directorConfigData.behaviourWeights[randomState]);
+                EnterState(EntityBehaviourState.Patrolling);
+            }
+
+            iddleTimer = 0;
+            int randomState = Random.Range(0, directorConfigData.behaviours.Count - 1);
+
+            if (directorConfigData.behaviours[randomState] != CurrentEntityBehaviourState)
+            {
+                EnterState(directorConfigData.behaviours[randomState]);
             }
         }
     }
@@ -194,10 +204,10 @@ public class Director : MonoBehaviour
         {
             chaseTimer = 0;
             playerLastTrace = player.transform.position;
-            entity.MoveTowardPosition(playerLastTrace);
+            entity.MoveTowardPosition(playerLastTrace + player.playerMovement.Velocity.normalized * directorConfigData.chaseLookAheadTime);
         }
 
-        DetectionHandle();
+        ChaseDetectionHandle();
     }
 
     private void Searching()
@@ -210,7 +220,7 @@ public class Director : MonoBehaviour
         if (!entity.IsMoving())
         {
             patrollingActionTimer += Time.deltaTime;
-            if (patrollingActionTimer >= directorConfigData.frequencyToTakePatrolAction)
+            if (patrollingActionTimer >= directorConfigData.frequencyToUpdatePatrolAction)
             {
                 patrollingActionTimer = 0;
                 int chance = Random.Range(0, 100);
@@ -224,6 +234,13 @@ public class Director : MonoBehaviour
         else
         {
             patrollingActionTimer = 0;
+            if (currentInterestPoint != null)
+            {
+                if (Vector3.Distance(currentInterestPoint.transform.position, entity.transform.position) < 3f)
+                {
+                    EnterState(EntityBehaviourState.Searching);
+                }
+            }
         }
     }
 
@@ -334,11 +351,11 @@ public class Director : MonoBehaviour
 
     #region InterestPoints
 
-    private void UpdateZonesWeights()
+    private void UpdateWeights()
     {
         foreach (InterestPoint point in interestPoints)
         {
-            float distanceFromCenter = Vector3.Distance(point.areaTransform.position, player.transform.position);
+            float distanceFromCenter = Vector3.Distance(point.transform.position, player.transform.position);
 
             if (distanceFromCenter <= point.areaRadius)
             {
@@ -357,15 +374,15 @@ public class Director : MonoBehaviour
 
     private Vector3 GetClosestPointFromCircleRadius(InterestPoint point)
     {
-        Vector3 playerDirection = player.transform.position - point.areaTransform.position;
+        Vector3 playerDirection = player.transform.position - point.transform.position;
         playerDirection.Normalize();
-        return point.areaTransform.position + playerDirection * point.areaRadius;
+        return point.transform.position + playerDirection * point.areaRadius;
     }
 
     private void GoToAnInterestPoint()
     {
         InterestPoint newPoint = SelectInterestPoint();
-        currentSearchPosition = newPoint.areaTransform.position;
+        currentSearchPosition = newPoint.transform.position;
         entity.MoveTowardPosition(currentSearchPosition);
         currentInterestPoint = newPoint;
     }
@@ -419,20 +436,10 @@ public class Director : MonoBehaviour
         {
             if (currentInterestPoint == point) Handles.color = Color.red;
             else Handles.color = Color.green;
-            Handles.CircleHandleCap(0, point.areaTransform.position, Quaternion.LookRotation(Vector3.up), point.areaRadius, EventType.Repaint);
+            Handles.CircleHandleCap(0, point.transform.position, Quaternion.LookRotation(Vector3.up), point.areaRadius, EventType.Repaint);
         }
     }
 #endif
-}
-
-
-[System.Serializable]
-public class InterestPoint
-{
-    public Transform areaTransform;
-    public float areaRadius;
-    public float weight;
-    public float distanceFromPlayer;
 }
 
 public enum EntityState
