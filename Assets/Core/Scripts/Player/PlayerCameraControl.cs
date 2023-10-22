@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerCameraControl : PlayerModule
 {
@@ -72,5 +75,10 @@ public class PlayerCameraControl : PlayerModule
         currentPitch = targetPitch;
 
         mainCamera.rotation = currentYaw * currentPitch;
+    }
+
+    public void SetSensitivity(float newSensitivity)
+    {
+        sensitivity = newSensitivity;
     }
 }
